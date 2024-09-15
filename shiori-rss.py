@@ -4,7 +4,8 @@
 import requests
 import feedparser
 
-keywords = ['android'] # Keyword simple or empty for all
+keywords = ['hacker'] # Keyword simple or empty for all
+tag = [{'name': 'hackernews'}] # Example for tagging
 
 session = requests.Session()
 
@@ -25,7 +26,7 @@ else:
 
 headers = {"Authorization": f"Bearer {token}"}
 
-rss_feed_url = 'https://feeds.arstechnica.com/arstechnica/index' # Feed Sample
+rss_feed_url = 'https://feeds.feedburner.com/TheHackersNews?format=xml' # Feed Sample
 feed = feedparser.parse(rss_feed_url)
 
 shiori_bookmark_url = 'https://[SHIORI INSTANCE]/api/bookmarks'
@@ -37,7 +38,8 @@ for entry in feed.entries:
     if not keywords or any(keyword.lower() in combined_text.lower() for keyword in keywords):
         bookmark_data = {
             'url': entry.link,
-            'title': entry.title
+            'title': entry.title,
+            'tags': tag
         }
         bookmark_response = session.post(shiori_bookmark_url, json=bookmark_data, headers=headers)
         if bookmark_response.status_code in [200, 201]:
